@@ -70,7 +70,6 @@ func resourceNetworkingPortV2() *schema.Resource {
 			"mac_address": {
 				Type:     schema.TypeString,
 				Optional: true,
-				ForceNew: true,
 				Computed: true,
 			},
 
@@ -559,6 +558,12 @@ func resourceNetworkingPortV2Update(ctx context.Context, d *schema.ResourceData,
 			hasChange = true
 			updateOpts.FixedIPs = fixedIPs
 		}
+	}
+
+	if d.HasChange("mac_address") {
+		hasChange = true
+		macAddress := d.Get("mac_address").(string)
+		updateOpts.MACAddress = &macAddress
 	}
 
 	var finalUpdateOpts ports.UpdateOptsBuilder
